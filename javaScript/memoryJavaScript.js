@@ -6,7 +6,7 @@ const cardArray = [
 
     {
         name: 'chesseburguer',
-        img: './imagens/chesseburguer.png'
+        img: './imagens/cheeseburger.png'
     },
 
     {
@@ -36,7 +36,7 @@ const cardArray = [
 
     {
         name: 'chesseburguer',
-        img: './imagens/chesseburguer.png'
+        img: './imagens/cheeseburger.png'
     },
 
     {
@@ -63,6 +63,9 @@ const cardArray = [
 cardArray.sort(() => 0.5 - Math.random())  //Deixando array random
 
 const gridDisplay = document.querySelector('#grid')
+let cardsChosen= []
+let cardsChosenIds = []
+const cardsWon = []
 
 function createBoard (){
     for (let i = 0; i < cardArray.length; i++){
@@ -77,9 +80,39 @@ function createBoard (){
 
 createBoard()
 
+
+function checkMatch(){
+    const cards = document.querySelectorAll('img')
+    const optionOneId = cardsChosenIds[0]
+    const optionTwoId = cardsChosenIds[1]
+    console.log('check for match!')
+
+    if(optionOneId == optionTwoId){
+        alert('Tou have clicked the same image!')
+    }
+
+    if (cardsChosen[0] == cardsChosen[1]){
+        alert('You found a match!')
+        cards[optionOneId].setAttribute('src', './imagens/white.png')
+        cards[optionTwoId].setAttribute('src', './imagens/white.png')
+        cards[optionOneId].removeEventListener('click', flipCard)
+        cards[optionTwoId].removeEventListener('click', flipCard)
+        cardsWon.push(cardsChosen)
+    }
+    cardsChosen = []
+    cardsChosenIds = []
+}
+
 function flipCard(){
     console.log(cardArray)
-   let cardId = this.getAttribute('data-id')
-   console.log(cardArray[cardId].name)
-   console.log('clicked',cardId)
+    let cardId = this.getAttribute('data-id')
+    cardsChosen.push(cardArray[cardId].name)//putting whatever is beeing clicked into an array
+    cardsChosenIds.push(cardId)
+    //console.log('clicked',cardId)
+    console.log(cardsChosen)
+    console.log(cardsChosenIds)
+    this.setAttribute('src', cardArray[cardId].img)
+    if(cardsChosen.length === 2){
+        setTimeout(checkMatch, 500)
+    }
 }
